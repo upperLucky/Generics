@@ -37,31 +37,31 @@ class PracticeActivity1 : AppCompatActivity() {
 
 
         val retrofit = Retrofit.Builder()
-                .baseUrl("https://api.github.com/")
+                .baseUrl("https://api.github.comd/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
         val api = retrofit.create(Api::class.java)
 
-        Single.zip<List<Repo>, List<Repo>, String>(
-                api.listReposRx("rengwuxian"),
-                api.listReposRx("google"),
-                BiFunction { repos1, repos2 -> "${repos1[0].name} - ${repos2[0].name}" })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : SingleObserver<String> {
-                    override fun onSubscribe(d: Disposable?) {
+        /* Single.zip<List<Repo>, List<Repo>, String>(
+                 api.listReposRx("rengwuxian"),
+                 api.listReposRx("google"),
+                 BiFunction { repos1, repos2 -> "${repos1[0].name} - ${repos2[0].name}" })
+                 .observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(object : SingleObserver<String> {
+                     override fun onSubscribe(d: Disposable?) {
 
-                    }
+                     }
 
-                    override fun onSuccess(combined: String) {
-                        textView.text = combined
-                    }
+                     override fun onSuccess(combined: String) {
+                         textView.text = combined
+                     }
 
-                    override fun onError(e: Throwable) {
-                        textView.text = e.message
-                    }
+                     override fun onError(e: Throwable) {
+                         textView.text = e.message
+                     }
 
-                })
+                 })*/
 
 
         /**
@@ -69,9 +69,11 @@ class PracticeActivity1 : AppCompatActivity() {
          */
         lifecycleScope.launch {
             try {
-                val rengwuxian = async { api.listReposKt("rengwuxian") }
-                val google = async { api.listReposKt("google") }
-                textView.text = "${rengwuxian.await()[0].name} - ${google.await()[0].name}"
+                coroutineScope {
+                    val rengwuxian = async { api.listReposKt("rengwuxian") }
+                    val google = async { api.listReposKt("google") }
+                    textView.text = "${rengwuxian.await()[0].name} - ${google.await()[0].name}"
+                }
             } catch (e: Exception) {
                 textView.text = e.message
             }

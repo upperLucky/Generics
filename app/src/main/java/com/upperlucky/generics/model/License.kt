@@ -1,5 +1,4 @@
-package com.hencoder.coroutinescamp.model
-
+package com.upperlucky.generics.model
 data class License(
     val key: String,
     val name: String,

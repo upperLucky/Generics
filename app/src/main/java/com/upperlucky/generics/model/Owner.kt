@@ -1,5 +1,4 @@
-package com.hencoder.coroutinescamp.model
-
+package com.upperlucky.generics.model
 data class Owner(
     val avatar_url: String,
     val events_url: String,
